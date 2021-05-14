@@ -869,10 +869,14 @@ describe('Protocol', function() {
   });
 
   describe('#handleMirror', function() {
-    const sandbox = sinon.createSandbox();
+    const sandbox = sinon.sandbox.create();
     afterEach(() => sandbox.restore());
 
-    var Protocol = proxyquire('../../lib/network/protocol', {    });
+    var Protocol = proxyquire('../../lib/network/protocol', {
+      '../bridge-client': sinon.stub().returns({
+        createExchangeReport: sinon.stub()
+      })
+    });
 
     it('should error if it fails to load', function(done) {
       var proto = new Protocol({
@@ -1353,7 +1357,7 @@ describe('Protocol', function() {
   });
 
   describe('#_askNeighborsForTunnels', function() {
-    const sandbox = sinon.createSandbox();
+    const sandbox = sinon.sandbox.create();
     afterEach(() => sandbox.restore());
 
     it('should skip adding tunnels if error response', function(done) {

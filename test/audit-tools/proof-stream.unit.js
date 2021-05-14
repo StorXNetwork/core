@@ -8,8 +8,8 @@ var sinon = require('sinon');
 
 describe('Proof', function() {
 
-  const CHALLENGE = Buffer.from('d3ccb55d5c9bd56606bca0187ecf28699cb674fb7e24' +
-                               '3fb4f180078735181686', 'hex');
+  const CHALLENGE = Buffer.from('d3ccb55d5c9bd56606bca0187ecf28699cb674fb7e243' +
+                               'fb4f180078735181686', 'hex');
   const SHARD = Buffer.from('testshard');
 
   describe('@constructor', function() {
@@ -112,7 +112,7 @@ describe('Proof', function() {
           expect(_getChallengeResponse(result)).to.eql(
             utils.rmd160sha256b(utils.rmd160sha256b(
               Buffer.concat([Buffer.from(challenge, 'hex'), SHARD])
-            ))
+          ))
           );
           done();
         });

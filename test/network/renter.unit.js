@@ -469,7 +469,7 @@ describe('RenterInterface', function() {
   });
 
   describe('#getMirrorNodes', function() {
-    const sandbox = sinon.createSandbox();
+    const sandbox = sinon.sandbox.create();
     afterEach(() => sandbox.restore());
 
     it('should callback error if all nodes fail (send error)', function(done) {

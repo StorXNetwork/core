@@ -115,7 +115,7 @@ describe('Network/Transport', function() {
 
   describe('#_checkIfReachable', function() {
 
-    it('should check the contact if address public', function(done) {
+    it('it should check the contact if address public', function(done) {
       var emitter = new EventEmitter();
       emitter.end = sinon.stub();
       var _check = sinon.stub().returns(emitter);
@@ -134,7 +134,7 @@ describe('Network/Transport', function() {
       emitter.emit('connect');
     });
 
-    it('should callback false if not reachable', function(done) {
+    it('it should callback false if not reachable', function(done) {
       var emitter = new EventEmitter();
       emitter.destroy = sinon.stub();
       var _check = sinon.stub().returns(emitter);
@@ -623,7 +623,7 @@ describe('Network/Transport', function() {
       var message = '{"id":"test","method":"PING","params":{}}';
       var receive = sinon.stub();
       var Transport = proxyquire('../../lib/network/transport', {
-        'restify-clients': {
+        'restify': {
           createJsonClient: function() {
             return {
               post: sinon.stub().callsArgWith(2, new Error('Failed'))
@@ -648,7 +648,7 @@ describe('Network/Transport', function() {
       var message = '{"id":"test","method":"PING","params":{}}';
       var receive = sinon.stub();
       var Transport = proxyquire('../../lib/network/transport', {
-        'restify-clients': {
+        'restify': {
           createJsonClient: function() {
             return {
               post: sinon.stub().callsArgWith(
@@ -683,7 +683,7 @@ describe('Network/Transport', function() {
         done();
       };
       var Transport = proxyquire('../../lib/network/transport', {
-        'restify-clients': {
+        'restify': {
           createJsonClient: function() {
             return {
               post: sinon.stub().callsArgWith(

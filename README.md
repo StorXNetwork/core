@@ -1,12 +1,10 @@
-_**Notice**: Development on this repo is deprecated as we continue our v3 rearchitecture. Please see https://github.com/storj/storj for ongoing v3 development._
-
 [![Storj](https://nodei.co/npm/storj-lib.png?downloads=true)](http://storj.github.io/core)
 ==========================================================================================
 
-[![Build Status](https://img.shields.io/travis/storj/core.svg?style=flat-square)](https://travis-ci.org/storj/core)
+[![Build Status](https://img.shields.io/travis/Storj/core.svg?style=flat-square)](https://travis-ci.org/Storj/core)
 [![Coverage Status](https://img.shields.io/coveralls/Storj/core.svg?style=flat-square)](https://coveralls.io/r/Storj/core)
 [![NPM](https://img.shields.io/npm/v/storj-lib.svg?style=flat-square)](https://www.npmjs.com/package/storj-lib)
-[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/storj/core/master/LICENSE)
+[![License](https://img.shields.io/badge/license-AGPL3.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/Storj/core/master/LICENSE)
 
 Implementation of the Storj protocol for Node.js. You must have Node.js v6.9.1, Python v2.x.x,
 and Git installed. [Complete documentation can be found here](http://storj.github.io/core).
@@ -17,7 +15,7 @@ npm install storj-lib --save
 
 Notices
 -------
-- The BridgeClient methods  `storeFileInBucket` and `resolveFileFromPointers` are deprecated, please see [node-libstorj](https://github.com/storj/node-libstorj) and [libstorj](https://github.com/storj/libstorj) for file transfer, as well as the client libraries at https://github.com/storj/awesome-storj#client-libraries
+- The BridgeClient methods  `storeFileInBucket` and `resolveFileFromPointers` are deprecated, please see [node-libstorj](https://github.com/storj/node-libstorj) and [libstorj](https://github.com/Storj/libstorj) for file transfer, as well as the client libraries at https://github.com/Storj/awesome-storj#client-libraries
 
 License
 -------

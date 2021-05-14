@@ -5,7 +5,6 @@
   },
   "globals": {},
   "rules": {
-    "no-buffer-constructor": "error",
     "no-bitwise": 0,
     "camelcase": 0,
     "curly": 2,
@@ -52,7 +51,7 @@
     ],
     "complexity": [
       2,
-      7
+      6
     ],
     "max-depth": [
       2,

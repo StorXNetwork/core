@@ -13,7 +13,11 @@ const rimraf = require('rimraf');
 const RAMStorageAdapter = require('../../lib/storage/adapters/ram');
 const Manager = require('../../lib/storage/manager');
 const Logger = require('kad').Logger;
-const ShardServer = proxyquire('../../lib/network/shard-server', {});
+const ShardServer = proxyquire('../../lib/network/shard-server', {
+  '../bridge-client': sinon.stub().returns({
+    createExchangeReport: sinon.stub()
+  })
+});
 const httpMocks = require('node-mocks-http');
 const utils = require('../../lib/utils');
 const stream = require('readable-stream');
@@ -29,7 +33,7 @@ var hdKey = masterKey.derive('m/3000\'/0\'');
 
 describe('ShardServer', function() {
   let server = null;
-  const sandbox = sinon.createSandbox();
+  const sandbox = sinon.sandbox.create();
   let tmpPath = '/tmp/storj-shard-server-test-' +
       crypto.randomBytes(4).toString('hex') + '/'
 
@@ -231,7 +235,7 @@ describe('ShardServer', function() {
   });
 
   describe('#routeConsignment', function() {
-    const sandbox = sinon.createSandbox();
+    const sandbox = sinon.sandbox.create();
     afterEach(() => sandbox.restore());
 
     it('should send 401 if not authed', function(done) {
@@ -611,6 +615,7 @@ describe('ShardServer', function() {
           } else if (key === 'data_size') {
             return 5;
           }
+
         }
       }
       item.getContract = sinon.stub().returns(contract);
@@ -869,8 +874,7 @@ describe('ShardServer', function() {
         response.on('end', function() {
           expect(response.statusCode).to.equal(200);
           expect(server.farmerInterface.bridgeRequest.called).to.equal(true);
-          // _getData() returns empty string, should be checked?
-          expect(response._getBuffer().toString()).to.equal('hello');
+          expect(response._getData().toString()).to.equal('hello');
           done();
         });
         server.routeRetrieval(request, response);

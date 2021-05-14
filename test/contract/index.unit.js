@@ -211,19 +211,19 @@ describe('Contract (private)', function() {
           'ce8af';
       var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'));
       var hdKey = masterKey.derive('m/3000\'/0\'');
-      it('should validate with correct hd key and index', function() {
+      it('will validate with correct hd key and index', function() {
         var contract = Contract({
           renter_hd_key: hdKey.publicExtendedKey,
           renter_hd_index: 12
         });
         expect(contract);
       });
-      it('should not validate with non-base58 hdkey', function() {
+      it('will not validate with non-base58 hdkey', function() {
         expect(function() {
           Contract({renter_hd_key: '0lI'});
         }).to.throw(Error);
       });
-      it('should not validate with negative hd index', function() {
+      it('will not validate with negative hd index', function() {
         expect(function() {
           Contract({
             renter_hd_key: hdKey.publicExtendedKey,
@@ -231,7 +231,7 @@ describe('Contract (private)', function() {
           });
         }).to.throw(Error);
       });
-      it('should not validate with hardened index', function() {
+      it('will not validate with hardened index', function() {
         expect(function() {
           Contract({
             renter_hd_key: hdKey.publicExtendedKey,
@@ -239,7 +239,7 @@ describe('Contract (private)', function() {
           });
         }).to.throw(Error);
       });
-      it('should not validate with floating point index', function() {
+      it('will not validate with floating point index', function() {
         expect(function() {
           Contract({
             renter_hd_key: hdKey.publicExtendedKey,
@@ -266,7 +266,7 @@ describe('Contract (private)', function() {
         farmer_id: kp2.getNodeID(),
         payment_source: kp1.getAddress(),
         payment_destination: kp2.getAddress(),
-        data_hash: crypto.createHash('ripemd160').update('test').digest('hex')
+        data_hash: crypto.createHash('rmd160').update('test').digest('hex')
       });
       contract.sign('renter', kp1.getPrivateKey());
       contract.sign('farmer', kp2.getPrivateKey());

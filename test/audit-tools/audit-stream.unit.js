@@ -33,7 +33,7 @@ describe('AuditStream', function() {
   });
 
   describe('#_generateTree', function() {
-    const sandbox = sinon.createSandbox();
+    const sandbox = sinon.sandbox.create();
     afterEach(() => sandbox.restore());
 
     it('should generate the correct tree', function() {
