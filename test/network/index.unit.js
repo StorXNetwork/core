@@ -25,7 +25,7 @@ var seed = 'a0c42a9c3ac6abf2ba6a9946ae83af18f51bf1c9fa7dacc4c92513cc4d' +
     'd015834341c775dcd4c0fac73547c5662d81a9e9361a0aac604a73a321bd9103b' +
     'ce8af';
 
-var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'));
+var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'));
 var hdKey = masterKey.derive('m/3000\'/0\'');
 var nodeHdKey = hdKey.deriveChild(10);
 
@@ -410,7 +410,7 @@ describe('Network (private)', function() {
 
   describe('#_initKeyPair', function() {
 
-    it('it will derive keyPair and set hdKey and hdIndex', function() {
+    it('should derive keyPair and set hdKey and hdIndex', function() {
       var obj = {};
       var initKeyPair = Network.prototype._initKeyPair.bind(obj);
       initKeyPair({
@@ -422,7 +422,7 @@ describe('Network (private)', function() {
       expect(obj.keyPair).to.be.instanceOf(KeyPair);
     });
 
-    it('it will fail if given public extended key', function() {
+    it('should fail if given public extended key', function() {
       var obj = {};
       var initKeyPair = Network.prototype._initKeyPair.bind(obj);
       expect(function() {
@@ -433,7 +433,7 @@ describe('Network (private)', function() {
       }).to.throw(Error);
     });
 
-    it('it will set keyPair', function() {
+    it('should set keyPair', function() {
       var keyPair = new KeyPair();
       var obj = {};
       var initKeyPair = Network.prototype._initKeyPair.bind(obj);
@@ -558,7 +558,7 @@ describe('Network (private)', function() {
   });
 
   describe('#_verifySignature', function() {
-    var sandbox = sinon.sandbox.create();
+    var sandbox = sinon.createSandbox();
     afterEach(function() {
       sandbox.restore();
     });
@@ -608,7 +608,7 @@ describe('Network (private)', function() {
       var verify = Network.prototype._verifySignature.bind({
         _pubkeys: {},
       });
-      sandbox.stub(secp256k1, 'recover').returns(new Buffer(pub, 'hex'));
+      sandbox.stub(secp256k1, 'ecdsaRecover').returns(Buffer.from(pub, 'hex'));
       var msg = {
         method: 'PING',
         id: '123456',
@@ -637,7 +637,7 @@ describe('Network (private)', function() {
 
     it('should callback with error if secp256k1 throws', function(done) {
       var error = new Error('Something about points and curves...');
-      sandbox.stub(secp256k1, 'recover').throws(error);
+      sandbox.stub(secp256k1, 'ecdsaRecover').throws(error);
       var verify = Network.prototype._verifySignature.bind({
         _pubkeys: {}
       });
@@ -762,7 +762,7 @@ describe('Network (private)', function() {
   });
 
   describe('#_signMessage', function() {
-    var sandbox = sinon.sandbox.create();
+    var sandbox = sinon.createSandbox();
     afterEach(function() {
       sandbox.restore();
     });
@@ -774,7 +774,7 @@ describe('Network (private)', function() {
         params: {}
       };
       var error = new Error('Something about points and curves...');
-      sandbox.stub(secp256k1, 'sign').throws(error);
+      sandbox.stub(secp256k1, 'ecdsaSign').throws(error);
       Network.prototype._signMessage.call({
         keyPair: KeyPair()
       }, msg, function(err) {
@@ -805,12 +805,12 @@ describe('Network (private)', function() {
         'd015834341c775dcd4c0fac73547c5662d81a9e9361a0aac604a73a321bd9103b' +
         'ce8af';
 
-    var masterKey = HDKey.fromMasterSeed(new Buffer(seed, 'hex'));
+    var masterKey = HDKey.fromMasterSeed(Buffer.from(seed, 'hex'));
     var hdKey = masterKey.derive('m/3000\'/0\'');
     var key2 = hdKey.deriveChild(12);
     var publicKey = key2.publicKey;
 
-    it('will return true if derived public key matches', function() {
+    it('should return true if derived public key matches', function() {
       var verify = Network.prototype._verifyHDKeyContact.bind({
         _hdcache: {}
       });
@@ -821,7 +821,7 @@ describe('Network (private)', function() {
       expect(verify(contact, publicKey)).to.equal(true);
     });
 
-    it('will return false if derived public key does not match', function() {
+    it('should return false if derived public key does not match', function() {
       var verify = Network.prototype._verifyHDKeyContact.bind({
         _hdcache: {}
       });
@@ -832,7 +832,7 @@ describe('Network (private)', function() {
       expect(verify(contact, publicKey)).to.equal(false);
     });
 
-    it('will return true if contact does nat have hd contact', function() {
+    it('should return true if contact does nat have hd contact', function() {
       var verify = Network.prototype._verifyHDKeyContact.bind({
         _hdcache: {}
       });
@@ -906,7 +906,8 @@ describe('Network (private)', function() {
       CLEANUP.push(net);
       var _acCallCount = 0;
       var _getSize = sinon.stub(net._tunnelers, 'getSize').returns(20);
-      var _addContact = sinon.stub(net._tunnelers, 'addContact', function() {
+      // eslint-disable-next-line max-len
+      var _addContact = sinon.stub(net._tunnelers, 'addContact').callsFake(function() {
         _acCallCount++;
 
         if (_acCallCount === 1) {
@@ -923,16 +924,17 @@ describe('Network (private)', function() {
         protocol: version.protocol
       }));
       net.on('ready', function() {
-        var _subscribe = sinon.stub(net._pubsub, 'subscribe', function(t, cb) {
-          if (t.indexOf('0e01') !== -1) {
-            cb({
-              address: '127.0.0.1',
-              port: 1337,
-              nodeID: utils.rmd160('nodeid'),
-              protocol: version.protocol
-            }, '0e01');
-          }
-        });
+        var _subscribe = sinon.stub(net._pubsub, 'subscribe')
+          .callsFake(function(t, cb) {
+            if (t.indexOf('0e01') !== -1) {
+              cb({
+                address: '127.0.0.1',
+                port: 1337,
+                nodeID: utils.rmd160('nodeid'),
+                protocol: version.protocol
+              }, '0e01');
+            }
+          });
         net._listenForTunnelers();
         setImmediate(function() {
           _getSize.restore();
@@ -961,16 +963,17 @@ describe('Network (private)', function() {
       CLEANUP.push(net);
       var _removeContact = sinon.stub(net._tunnelers, 'removeContact');
       net.on('ready', function() {
-        var _subscribe = sinon.stub(net._pubsub, 'subscribe', function(t, cb) {
-          if (t.indexOf('0e00') !== -1) {
-            cb({
-              address: '127.0.0.1',
-              port: 1337,
-              nodeID: utils.rmd160('nodeid'),
-              protocol: version.protocol
-            }, '0e00');
-          }
-        });
+        var _subscribe = sinon.stub(net._pubsub, 'subscribe')
+          .callsFake(function(t, cb) {
+            if (t.indexOf('0e00') !== -1) {
+              cb({
+                address: '127.0.0.1',
+                port: 1337,
+                nodeID: utils.rmd160('nodeid'),
+                protocol: version.protocol
+              }, '0e00');
+            }
+          });
         net._listenForTunnelers();
         setImmediate(function() {
           _removeContact.restore();
@@ -1141,7 +1144,7 @@ describe('Network (private)', function() {
   });
 
   describe('#_findTunnel', function() {
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
     afterEach(() => sandbox.restore());
 
     it('should callback error if no neighbors provided', function(done) {
@@ -1184,7 +1187,7 @@ describe('Network (private)', function() {
       );
       sandbox.stub(
         net,
-        '_establishTunnel',
+        '_establishTunnel').callsFake(
         function(tunnels, cb) {
           expect(tunnels).to.have.lengthOf(2);
           cb();
@@ -1209,7 +1212,7 @@ describe('Network (private)', function() {
       CLEANUP.push(net);
       sandbox.stub(
         net,
-        '_establishTunnel',
+        '_establishTunnel').callsFake(
         function(tunnels, cb) {
           expect(tunnels).to.have.lengthOf(1);
           cb();
@@ -1475,7 +1478,7 @@ describe('Network (private)', function() {
   });
 
   describe('#_enterOverlay', function() {
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
     afterEach(() => sandbox.restore());
 
     it('should use bridge to get seeds and error if fails', function(done) {
