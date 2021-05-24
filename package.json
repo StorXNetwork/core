@@ -77,7 +77,7 @@
     "kad-quasar": "^1.2.4",
     "kfs": "StorXNetwork/kfs",
     "knuth-shuffle": "^1.0.1",
-    "leveldown": "^2.0.0",
+    "leveldown": "^5.4.1",
     "levelup": "^2.0.0",
     "merge": "^1.2.0",
     "mkdirp": "^0.5.1",
