@@ -73,6 +73,7 @@
     "jsen": "^0.6.6",
     "json-stable-stringify": "^1.0.1",
     "kad": "^1.6.4",
+    "kad-logger-json": "^0.1.2",
     "kad-quasar": "^1.2.4",
     "kfs": "github:StorXNetwork/kfs",
     "knuth-shuffle": "^1.0.1",
